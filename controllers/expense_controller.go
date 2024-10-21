@@ -25,3 +25,23 @@ func GetUserExpenses(c *fiber.Ctx) error {
 	}
 	return c.JSON(expenses)
 }
+
+func GetAllExpenses(c *fiber.Ctx) error {
+	expenses, err := services.GetAllExpenses()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to fetch expenses"})
+	}
+	return c.JSON(expenses)
+}
+
+func DownloadBalanceSheet(c *fiber.Ctx) error {
+	balanceSheet, err := services.GenerateBalanceSheetCSV()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to generate balance sheet"})
+	}
+
+	// Send the CSV as a file download
+	c.Set("Content-Disposition", "attachment; filename=balance_sheet.csv")
+	c.Set("Content-Type", "text/csv")
+	return c.SendStream(balanceSheet)
+}
