@@ -12,8 +12,15 @@ type Expense struct {
 	UserID      uint    `json:"user_id"`
 	Name        string  `json:"name"`
 	User        User    `gorm:"foreignKey:UserID"` // Reference to the user who paid
-	// Expense name
 
+}
+
+type ExpenseSplit struct {
+	gorm.Model
+	ExpenseID  uint    `json:"expense_id"`
+	UserID     uint    `json:"user_id"`
+	Amount     float64 `json:"amount"`
+	Percentage float64 `json:"percentage"`
 }
 
 //type Expense struct {
@@ -25,11 +32,3 @@ type Expense struct {
 //
 //	User User `gorm:"foreignKey:UserID"` // Reference to the user who paid
 //}
-
-type ExpenseSplit struct {
-	gorm.Model
-	ExpenseID  uint    `json:"expense_id"`
-	UserID     uint    `json:"user_id"`
-	Amount     float64 `json:"amount"`
-	Percentage float64 `json:"percentage"`
-}

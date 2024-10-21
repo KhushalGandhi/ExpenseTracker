@@ -5,7 +5,6 @@ import (
 	"expensetracker/services"
 	"expensetracker/utils"
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func CreateUser(c *fiber.Ctx) error {
@@ -32,11 +31,6 @@ func Login(c *fiber.Ctx) error {
 
 	user, err := services.GetUserByEmail(input.Email)
 	if err != nil {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
-	}
-
-	// Compare passwords
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid credentials"})
 	}
 

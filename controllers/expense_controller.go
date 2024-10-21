@@ -8,11 +8,25 @@ import (
 
 func AddExpense(c *fiber.Ctx) error {
 	expense := new(models.Expense)
+
 	if err := c.BodyParser(expense); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Cannot parse JSON"})
 	}
+
+	// Get the user_id from the token
+	userIdFloat, ok := c.Locals("user_id").(float64)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Invalid user ID"})
+	}
+
+	// Convert userIdFloat to uint
+	userId := uint(userIdFloat)
+
+	// Use userId in your expense creation logic
+	expense.UserID = userId // Assuming your Expense model has a UserID field
+
 	if err := services.AddExpense(expense); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to add expense"})
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create expense"})
 	}
 	return c.Status(fiber.StatusCreated).JSON(expense)
 }

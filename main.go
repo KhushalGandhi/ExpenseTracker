@@ -3,6 +3,7 @@ package main
 import (
 	"expensetracker/migrations"
 	"expensetracker/routes"
+	"expensetracker/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -29,6 +30,9 @@ func initDB() {
 	if errDb != nil {
 		log.Fatal("Failed to connect to the database")
 	}
+
+	services.SetDB(db)
+
 	migrations.RunMigrations(db)
 }
 
